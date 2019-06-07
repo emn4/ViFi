@@ -13,7 +13,7 @@ fi
 INPUT_NAME=`basename $INPUT_FASTA`
 
 #Build alignment/tree, use 4GB for alignment, via Docker
-docker run -v $INPUT_DIR/:/data/ -v $OUTPUT_DIR/:/output/ smirarab/pasta run_pasta.py  --max-mem-mb=4000 -d dna -j $PREFIX -i $INPUT_NAME  -o /output/
+singularity run --bind $INPUT_DIR/:/data/ --bind $OUTPUT_DIR/:/output/ docker://smirarab/pasta run_pasta.py  --max-mem-mb=4000 -d dna -j $PREFIX -i $INPUT_NAME  -o /output/
 
 cd $OUTPUT_DIR
 
@@ -23,7 +23,7 @@ OUT_TREE=`grep "Writing resulting tree" $PREFIX.out.txt | awk '{print $7}'`
 OUT_TREE=`basename $OUT_TREE`
 
 #Decompose alignment/tree into HMMs via Docker
-docker run -v $OUTPUT_DIR/:/output/ docker.io/namphuon/vifi python "scripts/build_hmms.py" --tree_file /output/$OUT_TREE --alignment_file /output/$OUT_ALN --prefix $PREFIX --output_dir /output/
+singularity run --bind $OUTPUT_DIR/:/output/ docker://namphuon/vifi python "scripts/build_hmms.py" --tree_file /output/$OUT_TREE --alignment_file /output/$OUT_ALN --prefix $PREFIX --output_dir /output/
 
 #Build HMM list
 ls $OUTPUT_DIR/*.hmmbuild > $OUTPUT_DIR/hmm_list.txt
