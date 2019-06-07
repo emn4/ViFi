@@ -28,12 +28,14 @@ echo export REFERENCE_REPO=$PWD/data >> ~/.bashrc
 VIFI_DIR=$VIFI_DIR
 AA_DATA_REPO=$PWD/data_repo
 REFERENCE_REPO=$PWD/data
+
+#Replacing old hg19 with hg38p12
 rm $AA_DATA_REPO//hg19/hg19full.fa
 mv $VIFI_DIR/hg19full.fna $AA_DATA_REPO//hg19/hg19full.fa
 
 source ~/.bashrc
 
-#Creating directory for singularity to mount
+#Creating directory for singularity to mount automatically (specific to hipergator)
 mkdir -p /ufrc /bio /rlts /scratch/local
 
 #Pull the Docker file
