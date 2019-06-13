@@ -42,7 +42,7 @@ singularity pull docker://emn4/vifi
 #Set up reference for alignment
 echo "Building the hg19+HPV reference"
 cat $AA_DATA_REPO//hg19/hg19full.fa $REFERENCE_REPO/hpv/hpv.unaligned.fas > $REFERENCE_REPO/hpv/hg19_hpv.fas
-singularity run --bind $REFERENCE_REPO/hpv/:/home/hpv/ docker://namphuon/vifi bwa index /home/hpv/hg19_hpv.fas
+singularity run --bind $REFERENCE_REPO/hpv/:/home/hpv/ docker://emn4/vifi bwa index /home/hpv/hg19_hpv.fas
 
 #Build reduced list of HMMs for testing
 echo "Running test for ViFi"
