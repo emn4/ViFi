@@ -11,5 +11,5 @@ OUTPUT_DIR=`realpath $OUTPUT_DIR`
 cat $AA_DATA_REPO//hg19/hg19full.fa $INPUT_FASTA > $REFERENCE_REPO/$PREFIX/hg19_${PREFIX}.fas
 
 #Build index
-singularity run --bind $REFERENCE_REPO/$PREFIX/:/home/$PREFIX/ docker://namphuon/vifi bwa index /home/$PREFIX/hg19_${PREFIX}.fas
+singularity run --bind $REFERENCE_REPO/$PREFIX/:/home/$PREFIX/ docker://emn4/vifi bwa index /home/$PREFIX/hg19_${PREFIX}.fas
 

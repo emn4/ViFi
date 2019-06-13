@@ -23,7 +23,7 @@ OUT_TREE=`grep "Writing resulting tree" $PREFIX.out.txt | awk '{print $7}'`
 OUT_TREE=`basename $OUT_TREE`
 
 #Decompose alignment/tree into HMMs via Docker
-singularity run --bind $OUTPUT_DIR/:/output/ docker://namphuon/vifi python "scripts/build_hmms.py" --tree_file /output/$OUT_TREE --alignment_file /output/$OUT_ALN --prefix $PREFIX --output_dir /output/
+singularity run --bind $OUTPUT_DIR/:/output/ docker://emn4/vifi python "scripts/build_hmms.py" --tree_file /output/$OUT_TREE --alignment_file /output/$OUT_ALN --prefix $PREFIX --output_dir /output/
 
 #Build HMM list
 ls $OUTPUT_DIR/*.hmmbuild > $OUTPUT_DIR/hmm_list.txt

@@ -35,12 +35,9 @@ mv $VIFI_DIR/hg19full.fna $AA_DATA_REPO//hg19/hg19full.fa
 
 source ~/.bashrc
 
-#Creating directory for singularity to mount automatically (specific to hipergator)
-mkdir -p /ufrc /bio /rlts /scratch/local
-
 #Pull the Docker file
 echo "Getting the dockerized version of ViFi"
-singularity pull docker://namphuon/vifi
+singularity pull docker://emn4/vifi
 
 #Set up reference for alignment
 echo "Building the hg19+HPV reference"
