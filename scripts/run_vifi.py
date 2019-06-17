@@ -39,7 +39,8 @@ def parse_args(reference_dir):
                             help='''Disabled use of HMMs in search.  Useful if user only wants to use reference-based mapping to detect integrations.''')
     options = parser.parse_args()
 
-    # Build input_string for docker run as well as vifi_args, as well as verify all options
+    # Build input_string for docker run as well as vifi_args and environmental variables, as well as verify all options
+    env_string = ""
     input_string = ""
     vifi_string = ""
 
@@ -55,8 +56,9 @@ def parse_args(reference_dir):
         else:
             forward_dir = os.path.dirname(os.path.realpath(options.forward))
             reverse_dir = os.path.dirname(os.path.realpath(options.reverse))
-            input_string += "--bind %s:/home/fastq1/ --bind %s:/home/fastq2/ SINGULARITYENV_READ1=%s SINGULARITYENV_READ2=%s " % (
-            forward_dir, reverse_dir, os.path.basename(options.forward), os.path.basename(options.reverse))
+            env_string += "SINGULARITYENV_READ1=%s SINGULARITYENV_READ2=%s " % (os.path.basename(options.forward), os.path.basename(options.reverse))
+            input_string += "--bind %s:/home/fastq1/ --bind %s:/home/fastq2/ " % (
+            forward_dir, reverse_dir)
             vifi_string += "-f /home/fastq1/%s -r /home/fastq2/%s " % (
             os.path.basename(options.forward), os.path.basename(options.reverse))
     elif options.bamfile is not None and (options.forward is None or options.reverse is None):
@@ -64,8 +66,9 @@ def parse_args(reference_dir):
             parser.error('Unable to find %s' % (options.bamfile))
         else:
             bam_dir = os.path.dirname(os.path.realpath(options.bamfile))
-            input_string += "--bind %s:%sSINGULARITYENV_BAMFILE=%s " % (
-            bam_dir, '/home/bam/', os.path.basename(options.bamfile))
+            env_string += "SINGULARITYENV_BAMFILE=%s " % (os.path.basename(options.bamfile))
+            input_string += "--bind %s:%s " % (
+            bam_dir, '/home/bam/')
             vifi_string += "-b /home/bam/%s " % (os.path.basename(options.bamfile))
     if options.chromosome_list is not None:
         if not os.path.exists(options.chromosome_list):
@@ -73,8 +76,9 @@ def parse_args(reference_dir):
         else:
             chromosome_dir = os.path.dirname(os.path.realpath(options.chromosome_list))
             chromosome = os.path.basename(options.chromosome_list)
-            input_string += "--bind %s:%s SINGULARITYENV_CHROMOSOME=%s " % (
-            chromosome_dir, '/home/chromosomes/', os.path.basename(options.chromosome))
+            env_string += "SINGULARITYENV_CHROMOSOME=%s " % (os.path.basename(options.chromosome))
+            input_string += "--bind %s:%s " % (
+            chromosome_dir, '/home/chromosomes/')
             vifi_string += "-C /home/chromosomes/%s " % (os.path.basename(options.chromosome))
     if options.hmm_list is not None:
         if not os.path.exists(options.hmm_list):
@@ -84,8 +88,9 @@ def parse_args(reference_dir):
             hmm_list = os.path.basename(options.hmm_list)
             if options.docker == True:
                 temp_list = create_new_hmm_list(hmm_list_dir, hmm_list)
-                input_string += "--bind %s:%s SINGULARITYENV_HMM_LIST=%s " % (
-                hmm_list_dir, '/home/hmm_list/', os.path.basename(temp_list.name))
+                env_string += "SINGULARITYENV_HMM_LIST=%s " % (os.path.basename(temp_list.name))
+                input_string += "--bind %s:%s " % (
+                hmm_list_dir, '/home/hmm_list/')
                 vifi_string += "-l /home/hmm_list/%s " % (os.path.basename(temp_list.name))
                 options.temp_list = temp_list.name
     if options.reference.find('<VIRUS>') == -1:
@@ -95,12 +100,13 @@ def parse_args(reference_dir):
             # Fix default reference
             vifi_string += "-reference %s " % (options.default_reference)
     input_string += "--bind %s:/home/repo/data " % os.environ['REFERENCE_REPO']
-    input_string += "--bind %s:/home/output/  SINGULARITYENV_REFERENCE_REPO=/home/repo/data " % (
+    env_string += "SINGULARITYENV_REFERENCE_REPO=/home/repo/data "
+    input_string += "--bind %s:/home/output/ " % (
         os.path.realpath(options.output_dir))
     input_string += "--bind %s:/home/data_repo/ " % os.environ['AA_DATA_REPO']
     vifi_string += "-c %d " % (options.cpus)
     vifi_string += "-o /home/output/ -p %s " % (options.prefix)
-    options.cmd_string = 'singularity run docker://emn4/vifi %s python "scripts/run_vifi.py" %s' % (
+    options.cmd_string = '%s singularity run docker://emn4/vifi %s python "scripts/run_vifi.py" %s' % (env_string,
     input_string, vifi_string)
     # "docker run -e CPUS=$CPUS -v $REFERENCE_REPO:/home/repo/data -v $INPUT_DIR:/home/fastq/ -e READ1=$READ1 -e READ2=$READ2 -v $AA_DATA_REPO:/home/data_repo/ -v $OUTPUT_DIR:/home/output/ vifi:latest python "scripts/run_vifi.py %s" % (input_string
     return options
