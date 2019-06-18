@@ -50,4 +50,5 @@ ls $VIFI_DIR/data/hpv/hmms/hmmbuild.[0-9].hmm > $VIFI_DIR/data/hpv/hmms/hmms.txt
 source ~/.bashrc
 
 #Run ViFi under docker mode on test dataset on reduced HMM list set
+echo "Running Vifi"
 python $VIFI_DIR/scripts/run_vifi.py --cpus 4 --hmm_list $VIFI_DIR/data/hpv/hmms/hmms.txt -f $VIFI_DIR/test/data/test_R1.fq.gz -r $VIFI_DIR/test/data/test_R2.fq.gz -o $VIFI_DIR/tmp/docker/ --docker
