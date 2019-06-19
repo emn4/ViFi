@@ -30,6 +30,7 @@ AA_DATA_REPO=$PWD/data_repo
 REFERENCE_REPO=$PWD/data
 
 #Replacing old hg19 with hg38p12
+echo "Replacing old hg19 with hg38p12" 
 rm $AA_DATA_REPO//hg19/hg19full.fa
 mv $VIFI_DIR/hg19full.fna $AA_DATA_REPO//hg19/hg19full.fa
 
