@@ -30,7 +30,7 @@ AA_DATA_REPO=$PWD/data_repo
 REFERENCE_REPO=$PWD/data
 
 #Replacing old hg19 with hg38p12
-echo "Replacing old hg19 with hg38p12" 
+echo "Replacing old hg19 with hg38p12"
 rm $AA_DATA_REPO//hg19/hg19full.fa
 mv $VIFI_DIR/hg19full.fna $AA_DATA_REPO//hg19/hg19full.fa
 
@@ -52,4 +52,4 @@ source ~/.bashrc
 
 #Run ViFi under docker mode on test dataset on reduced HMM list set
 echo "Running Vifi"
-python $VIFI_DIR/scripts/run_vifi.py --cpus 4 --hmm_list $VIFI_DIR/data/hpv/hmms/hmms.txt -f $VIFI_DIR/test/data/test_R1.fq.gz -r $VIFI_DIR/test/data/test_R2.fq.gz -o $VIFI_DIR/tmp/docker/ --docker
+python3 $VIFI_DIR/scripts/run_vifi.py --cpus 4 --hmm_list $VIFI_DIR/data/hpv/hmms/hmms.txt -f $VIFI_DIR/test/data/test_R1.fq.gz -r $VIFI_DIR/test/data/test_R2.fq.gz -o $VIFI_DIR/tmp/docker/ --docker

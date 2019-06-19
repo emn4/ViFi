@@ -106,9 +106,9 @@ def parse_args(reference_dir):
     input_string += "--bind %s:/home/data_repo/ " % os.environ['AA_DATA_REPO']
     vifi_string += "-c %d " % (options.cpus)
     vifi_string += "-o /home/output/ -p %s " % (options.prefix)
-    options.cmd_string = '%s singularity run docker://emn4/vifi %s python "scripts/run_vifi.py" %s' % (env_string,
+    options.cmd_string = '%s singularity run docker://emn4/vifi %s python3 "scripts/run_vifi.py" %s' % (env_string,
     input_string, vifi_string)
-    print options.cmd_string
+    print(options.cmd_string)
     # "docker run -e CPUS=$CPUS -v $REFERENCE_REPO:/home/repo/data -v $INPUT_DIR:/home/fastq/ -e READ1=$READ1 -e READ2=$READ2 -v $AA_DATA_REPO:/home/data_repo/ -v $OUTPUT_DIR:/home/output/ vifi:latest python "scripts/run_vifi.py %s" % (input_string
     return options
 
@@ -163,7 +163,7 @@ if __name__ == '__main__':
     os.chdir(options.output_dir)
     print("[Identifying chimeric reads]: %f" % (time.time() - start_time))
     os.system(
-        "python %s/scripts/get_trans_new.py --unknown %s.unknown.bam --data %s --trans %s.trans.bam --viral %s.viral.bam %s" % (
+        "python3 %s/scripts/get_trans_new.py --unknown %s.unknown.bam --data %s --trans %s.trans.bam --viral %s.viral.bam %s" % (
         vifi_dir, options.prefix, options.bamfile, options.prefix, options.prefix,
         "" if options.chromosome_list is None else "--chrom %s" % options.chromosome_list))
     print("[Finished identifying chimeric reads]: %f" % (time.time() - start_time))
@@ -176,14 +176,14 @@ if __name__ == '__main__':
             options.hmm_list = 'hmms.txt'
         if not os.path.exists('tmp/'):
             os.mkdir('tmp/')
-        os.system("python %s/scripts/run_hmms.py -t %d -b %s.unknown.bam -d tmp -H %s" % (
+        os.system("python3 %s/scripts/run_hmms.py -t %d -b %s.unknown.bam -d tmp -H %s" % (
         vifi_dir, options.cpus, options.prefix, options.hmm_list))
         print("[Finished running HMMS]: %f" % (time.time() - start_time))
 
     # Cluster reads
     print("[Cluster and identify integration points]: %f" % (time.time() - start_time))
     os.system(
-        "python %s/scripts/merge_viral_reads.py --unknown %s.unknown.bam --trans %s.trans.bam --reduced tmp/temp/reduced.csv --map tmp/temp/unmapped.map --output %s.fixed.trans.bam" % (
+        "python3 %s/scripts/merge_viral_reads.py --unknown %s.unknown.bam --trans %s.trans.bam --reduced tmp/temp/reduced.csv --map tmp/temp/unmapped.map --output %s.fixed.trans.bam" % (
         vifi_dir, options.prefix, options.prefix, options.prefix))
     os.system("samtools sort -m 2G -@ %d %s.fixed.trans.bam > %s.fixed.trans.cs.bam" % (
     options.cpus, options.prefix, options.prefix))
@@ -191,7 +191,7 @@ if __name__ == '__main__':
     os.system(
         "samtools sort -m 2G -@ %d %s.viral.bam > %s.viral.cs.bam" % (options.cpus, options.prefix, options.prefix))
     os.system("samtools index %s.viral.cs.bam" % options.prefix)
-    os.system("python %s/scripts/cluster_trans_new.py --data %s.fixed.trans.cs.bam --output %s.clusters.txt %s" % (
+    os.system("python3 %s/scripts/cluster_trans_new.py --data %s.fixed.trans.cs.bam --output %s.clusters.txt %s" % (
     vifi_dir, options.prefix, options.prefix,
     "" if options.chromosome_list is None else "--chrom %s" % options.chromosome_list))
     print("[Finished cluster and identify integration points]: %f" % (time.time() - start_time))
