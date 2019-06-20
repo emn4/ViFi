@@ -57,7 +57,7 @@ def parse_args(reference_dir):
             forward_dir = os.path.dirname(os.path.realpath(options.forward))
             reverse_dir = os.path.dirname(os.path.realpath(options.reverse))
             env_string += "SINGULARITYENV_READ1=%s SINGULARITYENV_READ2=%s " % (os.path.basename(options.forward), os.path.basename(options.reverse))
-            input_string += "--bind %s:/home/fastq1/ --bind %s:/home/fastq2/ " % (
+            input_string += "-B %s:/home/fastq1/ -B %s:/home/fastq2/ " % (
             forward_dir, reverse_dir)
             vifi_string += "-f /home/fastq1/%s -r /home/fastq2/%s " % (
             os.path.basename(options.forward), os.path.basename(options.reverse))
@@ -67,7 +67,7 @@ def parse_args(reference_dir):
         else:
             bam_dir = os.path.dirname(os.path.realpath(options.bamfile))
             env_string += "SINGULARITYENV_BAMFILE=%s " % (os.path.basename(options.bamfile))
-            input_string += "--bind %s:%s " % (
+            input_string += "-B %s:%s " % (
             bam_dir, '/home/bam/')
             vifi_string += "-b /home/bam/%s " % (os.path.basename(options.bamfile))
     if options.chromosome_list is not None:
@@ -77,7 +77,7 @@ def parse_args(reference_dir):
             chromosome_dir = os.path.dirname(os.path.realpath(options.chromosome_list))
             chromosome = os.path.basename(options.chromosome_list)
             env_string += "SINGULARITYENV_CHROMOSOME=%s " % (os.path.basename(options.chromosome))
-            input_string += "--bind %s:%s " % (
+            input_string += "-B %s:%s " % (
             chromosome_dir, '/home/chromosomes/')
             vifi_string += "-C /home/chromosomes/%s " % (os.path.basename(options.chromosome))
     if options.hmm_list is not None:
@@ -89,7 +89,7 @@ def parse_args(reference_dir):
             if options.docker == True:
                 temp_list = create_new_hmm_list(hmm_list_dir, hmm_list)
                 env_string += "SINGULARITYENV_HMM_LIST=%s " % (os.path.basename(temp_list.name))
-                input_string += "--bind %s:%s " % (
+                input_string += "-B %s:%s " % (
                 hmm_list_dir, '/home/hmm_list/')
                 vifi_string += "-l /home/hmm_list/%s " % (os.path.basename(temp_list.name))
                 options.temp_list = temp_list.name
@@ -99,11 +99,11 @@ def parse_args(reference_dir):
         else:
             # Fix default reference
             vifi_string += "-reference %s " % (options.default_reference)
-    input_string += "--bind %s:/home/repo/data " % os.environ['REFERENCE_REPO']
+    input_string += "-B %s:/home/repo/data " % os.environ['REFERENCE_REPO']
     env_string += "SINGULARITYENV_REFERENCE_REPO=/home/repo/data "
-    input_string += "--bind %s:/home/output/ " % (
+    input_string += "-B %s:/home/output/ " % (
         os.path.realpath(options.output_dir))
-    input_string += "--bind %s:/home/data_repo/ " % os.environ['AA_DATA_REPO']
+    input_string += "-B %s:/home/data_repo/ " % os.environ['AA_DATA_REPO']
     vifi_string += "-c %d " % (options.cpus)
     vifi_string += "-o /home/output/ -p %s " % (options.prefix)
     options.cmd_string = '%ssingularity run docker://emn4/vifi %spython3 "scripts/run_vifi.py" %s' % (env_string,

@@ -28,6 +28,7 @@ echo export REFERENCE_REPO=$PWD/data >> ~/.bashrc
 VIFI_DIR=$VIFI_DIR
 AA_DATA_REPO=$PWD/data_repo
 REFERENCE_REPO=$PWD/data
+XDG_RUNTIME_DIR=$PWD/data/tmp
 
 #Replacing old hg19 with hg38p12
 echo "Replacing old hg19 with hg38p12"
@@ -43,7 +44,7 @@ singularity pull docker://emn4/vifi
 #Set up reference for alignment
 echo "Building the hg19+HPV reference"
 cat $AA_DATA_REPO//hg19/hg19full.fa $REFERENCE_REPO/hpv/hpv.unaligned.fas > $REFERENCE_REPO/hpv/hg19_hpv.fas
-singularity run --bind $REFERENCE_REPO/hpv/:/home/hpv/ docker://emn4/vifi bwa index /home/hpv/hg19_hpv.fas
+singularity run -B $REFERENCE_REPO/hpv/:/home/hpv/ docker://emn4/vifi bwa index /home/hpv/hg19_hpv.fas
 
 #Build reduced list of HMMs for testing
 echo "Running test for ViFi"
