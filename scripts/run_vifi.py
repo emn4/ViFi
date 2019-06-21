@@ -106,7 +106,7 @@ def parse_args(reference_dir):
     input_string += "-B %s:/home/data_repo/ " % os.environ['AA_DATA_REPO']
     vifi_string += "-c %d " % (options.cpus)
     vifi_string += "-o /home/output/ -p %s " % (options.prefix)
-    options.cmd_string = '%ssingularity run $sdocker://emn4/vifi python3 "scripts/run_vifi.py" %s' % (env_string,
+    options.cmd_string = '%ssingularity run %sdocker://emn4/vifi python3 "scripts/run_vifi.py" %s' % (env_string,
     input_string, vifi_string)
     print(options.cmd_string)
     # "docker run -e CPUS=$CPUS -v $REFERENCE_REPO:/home/repo/data -v $INPUT_DIR:/home/fastq/ -e READ1=$READ1 -e READ2=$READ2 -v $AA_DATA_REPO:/home/data_repo/ -v $OUTPUT_DIR:/home/output/ vifi:latest python "scripts/run_vifi.py %s" % (input_string
