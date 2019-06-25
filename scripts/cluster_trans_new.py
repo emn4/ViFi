@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 #cluster reads if consective reads have start position difference of less than 300bp regardless of strand                       
 

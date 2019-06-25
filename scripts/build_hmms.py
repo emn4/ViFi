@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 #Builds a collection of HMMs from an existing alignment and tree
 

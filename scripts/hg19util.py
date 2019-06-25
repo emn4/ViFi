@@ -40,6 +40,7 @@
 #Author: Viraj Deshpande
 #Contact: virajbdeshpande@gmail.com
 
+#!/usr/bin/env python3
 
 ##This is a suite to load hg19 genome, genes, exons, repeat content and perform operations on this genome, compare variants
 

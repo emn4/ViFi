@@ -2,7 +2,7 @@ import os
 from Bio import Entrez
 import re
 
-accession_path = raw_input(
+accession_path = input(
     "Input the path to accession list as a .txt file, making sure that each accession is separated by a comma.")
 
 accession_file = open(accession_path, "r")
