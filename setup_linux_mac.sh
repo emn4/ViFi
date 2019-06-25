@@ -1,8 +1,13 @@
 #!/usr/bin/env bash
+#Load modules
+module load encodings
+module load singularity
+
 #Get ViFi
 git clone https://github.com/emn4/ViFi.git
 cd ViFi
 VIFI_DIR=`pwd`
+mkdir tmp
 
 #Get data repos
 echo "Downloading the data_repo"
@@ -28,7 +33,7 @@ echo export REFERENCE_REPO=$PWD/data >> ~/.bashrc
 VIFI_DIR=$VIFI_DIR
 AA_DATA_REPO=$PWD/data_repo
 REFERENCE_REPO=$PWD/data
-XDG_RUNTIME_DIR=$PWD/data/tmp
+XDG_RUNTIME_DIR=$PWD/tmp
 
 #Replacing old hg19 with hg38p12
 echo "Replacing old hg19 with hg38p12"
@@ -53,4 +58,4 @@ source ~/.bashrc
 
 #Run ViFi under docker mode on test dataset on reduced HMM list set
 echo "Running Vifi"
-python3 $VIFI_DIR/scripts/run_vifi.py --cpus 4 --hmm_list $VIFI_DIR/data/hpv/hmms/hmms.txt -f $VIFI_DIR/test/data/test_R1.fq.gz -r $VIFI_DIR/test/data/test_R2.fq.gz -o $VIFI_DIR/tmp/docker/ --docker
+python $VIFI_DIR/scripts/run_vifi.py --cpus 4 --hmm_list $VIFI_DIR/data/hpv/hmms/hmms.txt -f $VIFI_DIR/test/data/test_R1.fq.gz -r $VIFI_DIR/test/data/test_R2.fq.gz -o $VIFI_DIR/tmp/docker/ --docker
