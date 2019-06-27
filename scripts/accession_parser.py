@@ -1,24 +1,26 @@
 #!/usr/bin/env python3
 import os
+import sys
 from Bio import Entrez
 import re
 from io import StringIO
 import numpy as np
+import pandas as pd
 
-accession_path = input(
-    "Input the path to accession list as a .txt file, making sure that each accession is separated by a comma.")
+accession_path = sys.argv[1]
 
-accession_data = np.asarray(np.genfromtxt(accession_path, skiprows = 2))
+accession_data = pd.read_excel(io=accession_path)
 
 search_term = input(
-    "Input the host you are searching for")
+    "Input the host you are searching for: ")
 
-pattern = re.compile(search_term)
+filtered_list = accession_data[accession_data['Host'].str.contains(search_term,case=False, na=False)]
+accession_list = filtered_list['Representative']
 
-accession_data = accession_data[pattern.search(accession_data[:,2]) != None]
+my_list = accession_list.str.cat(sep=",")
 
-accession_data = accession_data[:,1]
+file1 = open("virus_list.txt","w")
+file1.write(my_list)
+file1.close()
 
-my_list = ','.join(map(accession_data, my_list))
-
-print("Completed")
+print("Completed and saved to virus_list.txt")
